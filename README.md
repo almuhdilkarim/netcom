@@ -1,2 +1,2 @@
-# netgear
+# netcom
 network management system
