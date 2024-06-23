@@ -1,3 +1,11 @@
 #!/bin/bash
 
-gcc src/daecon.c -o daecon
+if [[ -f /usr/bin/daecon ]]; then
+	sudo rm -fr /usr/bin/daecon
+fi
+
+sudo gcc \
+	-lnotify \
+	$(pkg-config --cflags --libs glib-2.0) \
+	$(pkg-config --cflags --libs gdk-pixbuf-2.0) \
+	src/daecon.c -o /usr/bin/daecon

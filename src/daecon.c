@@ -2,110 +2,87 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <libnotify/notify.h>
+#include "devbar.h"
+#include "netsec.h"
+#include "servis.h"
 
-void vuid();
-void vpar( char *action, char *servis );
-void proc( char *action, char *servis );
-void wlan( char *action );
-void ethr( char *action );
-void vhos( char *action );
-void sec1( char *action );
-void sec2( char *action );
-void sec3( char *action );
+
+void errs( char *value );
+void srvc( char *value );
+void nsec( char *value );
 
 
 int main( int argc, char **argv )
 {
-  if ( argc != 3 ) 
+  if ( getuid() != 0 ) { errs("application need root privileges" ); }
+  if ( argc != 3 ) { errs( "parameter error, this command need 3 parameter"); }
+  if ( strlen( argv[1] ) > 8 || strlen( argv[1] ) < 1 ) { errs( "scope parameter is to long." ); }
+  if ( strlen( argv[2] ) > 20 || strlen( argv[2] ) < 1 ) { errs( "value parameter is to long." ); }
+
+
+  if ( strcmp( argv[1], "service" ) == 0 ) 
   {
-    fprintf(stderr, "rarameter limit execed");
-    exit(1);
+    char* value = argv[2]; srvc( value );
   }
-  vuid();
-  vpar( argv[1], argv[2]);
-  char* param_0 = argv[1];
-  char* param_1 = argv[2];
-  proc( param_0, param_1 );
+  else if ( strcmp (argv[1], "net-sec" ) == 0 ) 
+  {
+    char* value = argv[2]; nsec( value );
+  }
+  else
+  {
+    errs("command scope its not define");
+  }
+
   return 0;
 }
 
-
-void vuid() 
+void errs( char *value )
 {
-  if ( getuid() != 0 ) 
-  {
-    fprintf( stderr, "application need root privileges" );
+    fprintf( stderr, "%s", value );
     exit(1);
-  }
 }
 
 
-void vpar( char *action, char *servis ) {
 
-  if ( strlen( action ) > 2 || strlen( action ) < 1 )
-  {
-    fprintf( stderr, "action parameter is to long." );
-    exit(1);
-  }
 
-  if ( strlen( servis ) > 7 || strlen( servis ) < 1 )
-  {
-    fprintf( stderr, "service parameter to long." );
-    exit(1);
-  }
+void nsec( char *value )
+{
+  printf("karim\n");
 }
 
-
-void proc( char *action, char *servis ) 
+void srvc( char *value ) 
 {
-  if ( strcmp( servis, "wlan" ) == 0 )
+  if ( strcmp( value, "wireless" ) == 0 )
   {
-    wlan( action );
+    wlan();
   }
-  else if ( strcmp( servis, "ethr" ) == 0 )
+  else if ( strcmp( value, "ethernet" ) == 0 )
   {
-    ethr( action );
+    ethr();
+  }
+  else if ( strcmp( value, "bluetooth" ) == 0 ) 
+  {
+    bluz();
+  }
+  else if ( strcmp( value, "virtualization" ) == 0 ) 
+  {
+    vhos();
+  }
+  else if ( strcmp( value, "cockpit" ) == 0 )
+  {
+    cock();
+  }
+  else if ( strcmp( value, "docker" ) == 0 )
+  {
+    dock();
+  }
+  else if ( strcmp( value, "sshd" ) == 0 )
+  {
+    sshd();
   }
   else
   {
-    printf("\"%s\" module not available \n", servis );
-  }
-}
-
-
-void wlan( char *action )
-{
-  if ( strcmp( action, "-i" ) == 0 ) 
-  {
-    system("systemctl start iwd");
-    system("systemctl start firewalld");
-    puts("wlan daemon enable");
-  }
-  else if ( strcmp ( action, "-s") == 0 )
-  {
-    system("systemctl stop iwd");
-    system("systemctl stop firewalld");
-    puts("wlan daemon disable");
-  }
-  else
-  {
-    printf("Unknown \"%s\" operation parameter\n", action);
-  }
-}
-
-
-void ethr( char *action )
-{
-  if ( strcmp( action, "-i" ) == 0 )
-  {
-    system("systemctl start systemd-networkd");
-    system("systemctl start firewalld");
-    puts("ethernet daemon enable");
-  }
-  else
-  {
-    system("systemctl stop systemd-networkd");
-    system("systemctl stop firewalld");
-    puts("ethernet daemon disable");
+    printf("\"%s\" module not available \n", value );
   }
 }
