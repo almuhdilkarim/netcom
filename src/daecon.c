@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <libnotify/notify.h>
 #include "helper.h"
-#include "netsec.h"
+#include "secmod.h"
 #include "servis.h"
 
 
@@ -60,6 +60,10 @@ void srvc( char *value )
   else if ( strcmp( value, "ethernet" ) == 0 )
   {
     ethr();
+  }
+  else if ( strcmp( value, "firewall" ) == 0 )
+  {
+    frwl();
   }
   else if ( strcmp( value, "bluetooth" ) == 0 ) 
   {
