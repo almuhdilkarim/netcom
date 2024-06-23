@@ -17,7 +17,7 @@ int notif( char *category, char *title, char *message , char *icon )
 		}
 }
 
-
+// https://www.linuxquestions.org/questions/programming-9/c-returning-char-array-pointer-4175490314/
 char* form_passwd() 
 {
   FILE *dialog = popen("zenity --password", "r");
