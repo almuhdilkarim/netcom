@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libnotify/notify.h>
-#include "devbar.h"
+#include "helper.h"
 #include "netsec.h"
 #include "servis.h"
 
@@ -15,7 +15,7 @@ void nsec( char *value );
 
 int main( int argc, char **argv )
 {
-  if ( getuid() != 0 ) { errs("application need root privileges" ); }
+  // if ( getuid() != 0 ) { errs("application need root privileges" ); }
   if ( argc != 3 ) { errs( "parameter error, this command need 3 parameter"); }
   if ( strlen( argv[1] ) > 8 || strlen( argv[1] ) < 1 ) { errs( "scope parameter is to long." ); }
   if ( strlen( argv[2] ) > 20 || strlen( argv[2] ) < 1 ) { errs( "value parameter is to long." ); }
@@ -25,7 +25,7 @@ int main( int argc, char **argv )
   {
     char* value = argv[2]; srvc( value );
   }
-  else if ( strcmp (argv[1], "net-sec" ) == 0 ) 
+  else if ( strcmp (argv[1], "netsec" ) == 0 ) 
   {
     char* value = argv[2]; nsec( value );
   }
@@ -37,6 +37,7 @@ int main( int argc, char **argv )
   return 0;
 }
 
+
 void errs( char *value )
 {
     fprintf( stderr, "%s", value );
@@ -44,12 +45,11 @@ void errs( char *value )
 }
 
 
-
-
 void nsec( char *value )
 {
   printf("karim\n");
 }
+
 
 void srvc( char *value ) 
 {

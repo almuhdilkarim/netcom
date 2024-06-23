@@ -1,154 +1,111 @@
-// network toogle service
-void wlan_init() {
-    system("systemctl start iwd");
-    notif();
-    puts("wireless daemon enable");
-}
-void wlan_stop() {
-    system("systemctl stop iwd");
-    puts("wireless daemon disable");
-}
-void ethr_init() {
-    system("systemctl start systemd-networkd");
-    puts("ethernet daemon enable");
-}
-
-void ethr_stop() {
-    system("systemctl stop systemd-networkd.socket");
-    system("systemctl stop systemd-networkd");
-    puts("ethernet daemon enable");
-}
+// wireless toogle service
 void wlan()
 {
-  if ( system("systemctl is-active --quiet iwd") != 0 ) 
+  if ( srv_check("iwd") != 0 ) 
   {
-    ethr_stop(); frwl_stop();
-    wlan_init(); frwl_init();
+    srv_setup("stop", "systemd-networkd");
+    srv_setup("init", "iwd");
   }
   else
   {
-    wlan_stop(); frwl_stop();
+    srv_setup("stop", "iwd");
   }
 }
+
+
+// ethernet toogle service
 void ethr()
 {
-  if ( system("systemctl is-active --quiet systemd-networkd") != 0 ) 
+  if ( srv_check("systemd-networkd") != 0 ) 
   {
-    wlan_stop(); frwl_stop();
-    ethr_init(); frwl_init();
+    srv_setup("stop", "iwd");
+    srv_setup("init", "systemd-networkd");
   }
   else
   {
-    ethr_stop(); frwl_stop();
+    srv_setup("stop", "systemd-networkd");
   }
 }
 
 
 // bluetooth toggle service
-void bluz_init() {
-    system("systemctl start bluetooth.service");
-    puts("bluetooth daemon enable");
-}
-void bluz_stop() {
-    system("systemctl stop bluetooth.service");
-    puts("bluetooth daemon disable");
-}
 void bluz()
 {
-  if ( system("systemctl is-active --quiet bluetooth.service") != 0 ) 
+  if ( srv_check( "bluetooth.service") != 0 ) 
   {
-    bluz_init();
+    srv_setup("init", "bluetooth.service");
   }
   else
   {
-    bluz_stop();
+    srv_setup("stop", "bluetooth.service");
   }
 }
 
 
 // virtualization toggle service
-void vhos_init() {
-    system("systemctl start libvirtd.socket");
-    puts("virtualization daemon disable");
-}
-void vhos_stop() {
-    system("systemctl stop libvirtd.socket");
-    puts("virtualization daemon disable");
-}
 void vhos()
 {
-  if ( system("systemctl is-active --quiet libvirtd.socket") != 0 ) 
+  if ( srv_check( "libvirtd.socket" ) != 0 ) 
   {
-    vhos_init();
+    srv_setup("init", "libvirtd.socket");
   }
   else
   {
-    vhos_stop();
+    srv_setup("stop", "libvirtd.socket");
   }
 }
 
 
 // cockpit toogle service
-void cock_init() {
-    system("systemctl start cockpit.socket");
-    puts("cockpit daemon enable");
-}
-void cock_stop() {
-    system("systemctl stop cockpit.socket");
-    puts("cockpit daemon disable");
-}
 void cock()
 {
-  if ( system("systemctl is-active --quiet cockpit.socket") != 0 ) 
+  if ( srv_check("cockpit.socket") != 0 ) 
   {
-    cock_init();
+    srv_setup("init", "cockpit.socket");
   }
   else
   {
-    cock_stop();
+    srv_setup("stop", "cockpit.socket");
   }
 }
 
 
 // docker toogle service
-void dock_init() {
-    system("systemctl start docker.socket");
-    puts("docker daemon enable");
-}
-void dock_stop() {
-    system("systemctl stop docker.socket");
-    puts("docker daemon disable");
-}
 void dock()
 {
-  if ( system("systemctl is-active --quiet docker.socket") != 0 ) 
+  if ( srv_check("docker.socket") != 0 ) 
   {
-    dock_init();
+    srv_setup("init", "docker.socket");
   }
   else
   {
-    dock_stop();
+    srv_setup("stop", "docker.socket");
   }
 }
 
 
 // sshd toogle service
-void sshd_init() {
-    system("systemctl start sshd");
-    puts("sshd daemon enable");
-}
-void sshd_stop() {
-    system("systemctl stop sshd");
-    puts("sshd daemon disable");
-}
 void sshd()
 {
-  if ( system("systemctl is-active --quiet sshd") != 0 ) 
+  if ( srv_check("sshd") != 0 ) 
   {
-    sshd_init();
+    srv_setup("init", "sshd");
   }
   else
   {
-    sshd_stop();
+    srv_setup("stop", "sshd");
+  }
+}
+
+
+// firewalld toggle service
+void frwl() {
+  if ( srv_check("firewalld") != 0 )
+  {
+    srv_setup("init", "firewalld");
+  }
+  else
+  {
+    srv_setup("stop", "firewalld");
   }
 }
